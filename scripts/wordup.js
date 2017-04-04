@@ -55,6 +55,12 @@ function addNewWordSubmission(word) {
     // replace the hardcoded 'false' with the real answer
     var alreadyUsed = false;
 
+    model.wordSubmissions.forEach(function(submission){
+        if (submission.word == word){
+            alreadyUsed = true;
+        }
+    });
+
     // if the word is valid and hasn't already been used, add it
     if (containsOnlyAllowedLetters(word) && alreadyUsed == false) {
         model.wordSubmissions.push({ word: word });
@@ -96,7 +102,7 @@ function checkIfWordIsReal(word) {
             // model.wordSubmissions is an array of objects. Each object has a word property with 
             // the submitted word. Loop through the array and find the one with the matching value
             // and add a isRealWord property set to theAnswer (true or false)
-            console.log(model.wordSubmissions);
+            //console.log(model.wordSubmissions);
             for (var i = 0; i < model.wordSubmissions.length; i++){
                 if (word == model.wordSubmissions[i].word){
                     var correspondingWord = model.wordSubmissions[i];
@@ -401,7 +407,11 @@ function currentScore() {
 
     // TODO 20
     // return the total sum of the word scores
-    return 0;
+    total = 0
+    for (var i = 0; i < wordScores.length; i++){
+        total += wordScores[i];
+    }
+    return total;
 }
 
 
