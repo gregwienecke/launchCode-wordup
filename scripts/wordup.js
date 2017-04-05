@@ -313,6 +313,10 @@ var scrabblePointsForEachLetter = {
     n: 1, o: 1, p: 3, q: 10, r: 1, s: 1, t: 1, u: 1, v: 4, w: 4, x: 8, y: 4, z: 10
 }
 
+var scrabblePointsForEachVowel = {
+    a: 1, e: 1, i: 1, o: 1, u: 1, y: 1
+}
+
 /**
  * Given a letter, checks whether that letter is "disallowed"
  * meaning it is not a member of the .allowedLetters list from the current model
@@ -358,7 +362,26 @@ function containsOnlyAllowedLetters(word) {
  * Each letter will be distinct (no repeats of the same letter)
  */
 function generateAllowedLetters() {
-    return chooseN(7, Object.keys(scrabblePointsForEachLetter));
+    var vowels = 'aeoiuy';
+    var letters = chooseN(7, Object.keys(scrabblePointsForEachLetter));
+
+    // Check how many vowels are in letters array
+    var numVowels = 0;
+    for (var i = 0; i < letters.length; i++){
+        if (vowels.search(letters[i]) > -1){
+            numVowels += 1;
+        }
+    }
+
+    // If there are no vowels, remove two letters and replace with 2 vowels
+    if (numVowels == 0){
+        console.log(letters);
+        letters.pop();
+        letters.pop();
+        var extraVowels = chooseN(2, Object.keys(scrabblePointsForEachVowel));
+        letters = letters.concat(extraVowels);
+    }
+    return letters;    
 }
 
 /**
@@ -424,11 +447,13 @@ function currentScore() {
 function chooseN(n, items) {
     var selectedItems = [];
     var total = Math.min(n, items.length);
+    
     for (var i = 0; i < total; i++) {
         index = Math.floor(Math.random() * items.length);
         selectedItems.push(items[index]);
         items.splice(index, 1);
     }
+
     return selectedItems;
 }
 
